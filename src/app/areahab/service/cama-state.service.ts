@@ -4,15 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class CamaStateService {
-  private calledCamas: { habitacion: number, cama: number, nombreHabitacion: string }[] = [];
+  private calledCamas: { habitacion: number, cama: number, nombreHabitacion: string, message?: string }[] = [];
   private redOutlineActive: boolean = false;
 
-  setCalledCama(habitacion: number, cama: number, nombreHabitacion: string): void {
-    this.calledCamas.push({ habitacion, cama, nombreHabitacion });
+  setCalledCama(habitacion: number, cama: number, nombreHabitacion: string, message?: string): void {
+    this.calledCamas.push({ habitacion, cama, nombreHabitacion, message });
     this.redOutlineActive = true;
   }
 
-  getCalledCamas(): { habitacion: number, cama: number, nombreHabitacion: string }[] {
+  getCalledCamas(): { habitacion: number, cama: number, nombreHabitacion: string, message?: string }[] {
     return this.calledCamas;
   }
 

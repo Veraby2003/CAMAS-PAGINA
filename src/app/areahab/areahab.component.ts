@@ -14,7 +14,7 @@ import { CamaStateService } from './service/cama-state.service';
   styleUrls: ['./areahab.component.css']
 })
 export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
-  llamadasCamas: { habitacion: number, cama: number, nombreHabitacion: string }[] = [];
+  llamadasCamas: { habitacion: number, cama: number, nombreHabitacion: string,message?: string}[] = [];
   private socketSubscription?: Subscription;
   private parpadeoActivo: { [key: number]: boolean } = {};
 
@@ -27,23 +27,22 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.socketSubscription = this.socketService.onRoomCalled().subscribe(data => {
-      const { habitacion, cama } = data;
+      const { habitacion, cama, message } = data;
       console.log('Data received:', data);
-
+  
       if (habitacion !== null && cama !== null) {
         const nombreHabitacion = this.getNombreHabitacion(habitacion);
-        this.camaStateService.setCalledCama(habitacion, cama, nombreHabitacion);
+        this.camaStateService.setCalledCama(habitacion, cama, nombreHabitacion, message); // Aquí se pasa el message si existe
         this.llamadasCamas = this.camaStateService.getCalledCamas();
         this.activarParpadeo(habitacion);
       }
     });
-
+  
     this.llamadasCamas = this.camaStateService.getCalledCamas();
     this.llamadasCamas.forEach(llamada => {
       this.activarParpadeo(llamada.habitacion);
     });
   }
-
   ngOnDestroy(): void {
     if (this.socketSubscription) {
       this.socketSubscription.unsubscribe();

@@ -23,22 +23,26 @@ let habitaciones = [
 
 app.post('/call-room', (req, res) => {
   console.log('Solicitud recibida en /call-room:', req.body);
-  const { habitacion, cama } = req.body;
+  const { habitacion, cama, mensaje } = req.body; // Agregamos mensaje como un campo opcional en el body
+  
   if (habitacion && cama) {
+    const message = mensaje || `Habitación ${habitacion}, Cama ${cama} activada`; // Mensaje personalizado o predeterminado
+    
     console.log(`Emitiendo evento roomCalled para Habitación ${habitacion}, Cama ${cama}`);
     
     // Enviar la señal repetidamente durante 5 segundos
     for (let i = 0; i < 1; i++) {
       setTimeout(() => {
-        io.emit('roomCalled', { habitacion, cama, message: `Habitación ${habitacion}, Cama ${cama} activada` });
+        io.emit('roomCalled', { habitacion, cama, message });
       }, i * 1000); // Enviar cada segundo (1000 milisegundos)
     }
     
-    res.json({ habitacion, cama, message: `Habitación ${habitacion}, Cama ${cama} activada` });
+    res.json({ habitacion, cama, message });
   } else {
     res.status(400).json({ error: 'Datos inválidos' });
   }
 });
+
 
 
 io.on('connection', (socket) => {
