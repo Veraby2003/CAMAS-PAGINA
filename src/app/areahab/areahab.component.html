@@ -1,0 +1,39 @@
+<div class="page-specific-background">
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-title">CENTRO DE SUPERVISION DE HABITACION</div>
+    </div>
+  </nav>
+
+  <!-- Iterar sobre las llamadas de camas acumuladas -->
+  <div *ngFor="let llamada of llamadasCamas; let i = index">
+    <div>
+      <h2>Habitación {{ llamada.habitacion }}</h2>
+      <h2>Cama {{ llamada.cama }}</h2>
+      <button (click)="eliminarLlamada(i)">Eliminar llamada</button>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <div class="rectangle top-left" id="habitacion1" (click)="redirigir('habitacion1')">
+      <div class="title">HABITACIÓN</div>
+      <div class="content"></div>
+      <div class="room-number">1</div>
+    </div>
+    <div class="rectangle top-right" id="habitacion2" (click)="redirigir('habitacion2')">
+      <div class="title">HABITACIÓN</div>
+      <div class="content"></div>
+      <div class="room-number">2</div>
+    </div>
+    <div class="rectangle bottom-left" id="habitacion3" (click)="redirigir('habitacion3')">
+      <div class="title">HABITACIÓN</div>
+      <div class="content"></div>
+      <div class="room-number">3</div>
+    </div>
+    <div class="rectangle bottom-right" id="habitacion4" (click)="redirigir('habitacion4')">
+      <div class="title">HABITACIÓN</div>
+      <div class="content"></div>
+      <div class="room-number">4</div>
+    </div>
+  </div>
+</div>

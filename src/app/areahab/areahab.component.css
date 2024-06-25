@@ -1,0 +1,178 @@
+.page-specific-background {
+  background-image: url('img/fondo_azul.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh; /* Asegura que ocupe toda la altura visible */
+  width: 100vw; /* Asegura que ocupe todo el ancho visible */
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Evita que haya scroll horizontal */
+}
+
+.grid-container {
+    position: relative;
+    width: 99vw;
+    height: 93vh;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px 20px;
+    margin-top: 40px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Estilo de los rectángulos */
+  .rectangle {
+    width: 100%;
+    height: 90%;
+    background-color: transparent;
+    background-image: url('img/imagen_camas.jpg'); /* Asegúrate de que la ruta de la imagen sea correcta */
+    background-size: cover;
+    background-position: center;
+    color: rgb(22, 29, 34);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, filter 0.2s ease-in-out;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  /* Efecto de hover en los rectángulos */
+  .rectangle:hover {
+    transform: scale(0.90);
+  }
+  
+  /* Posicionamiento de los rectángulos */
+  .top-left {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  
+  .top-right {
+    grid-area: 1 / 2 / 2 / 3;
+  }
+  
+  .bottom-left {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+  
+  .bottom-right {
+    grid-area: 2 / 2 / 3 / 3;
+  }
+  
+  /* Estilo del título */
+  .title {
+    background: linear-gradient(to bottom right, #18123b, #2a489b);
+    color: white;
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    padding: 10px;
+  }
+  
+  /* Contenido de los rectángulos */
+  .content {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0px;
+  }
+  
+  /* Animación de parpadeo */
+  @keyframes blink {
+    0% {
+      box-shadow: 0 0 0 0 rgb(255, 0, 0);
+      filter: none;
+      
+    }
+    50% {
+      box-shadow: 0 0 100px 100px rgba(255, 0, 0, 0);
+
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+      filter: none;
+    }
+  }
+  
+  .blink {
+    animation: blink 1.5s infinite;
+  }
+  /* Estilo del número de habitación */
+  .room-number {
+    background: linear-gradient(to bottom right, #18123b, #2a489b);
+    color: white;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+  }
+
+
+
+  .navbar {
+    background: linear-gradient(to bottom right, #18123b, #2a489b);
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  /* Ajuste para el contenido debajo de la barra de navegación */
+  .main-content {
+    margin-top: 20px; /* Altura de la barra de navegación + 10px de margen */
+    /*padding: 10px; /* Ajustar según sea necesario */
+  }
+  
+  .navbar-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .navbar-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: auto;
+    cursor: pointer;
+  }
+  
+  .navbar-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  .navbar-links li {
+    margin: 0 10px;
+  }
+  
+  .navbar-links a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+  }
+  
+  .navbar-links a:hover {
+    background-color: #b4b6d3;
+  }

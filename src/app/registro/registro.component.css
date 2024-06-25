@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+.gradient-rectangle {
+    width: 450px;
+    height: 500px;
+    background: linear-gradient(to bottom right, #f7f7f7, #5279e4);
+    border-radius: 20px;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+  }
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .circle-image {
+    width: 100px;
+    height: 100px;
+    background-color: white; /* Añade un fondo blanco para ver el sombreado */
+    border-radius: 50%;
+    margin-bottom: 20px; /* Espacio entre el círculo y el primer label */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .circle-image::before {
+    content: "";
+    width: 80px; /* Tamaño de la imagen dentro del círculo */
+    height: 80px; /* Tamaño de la imagen dentro del círculo */
+    background-image: url('img/anonimo.png/');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+  }
+  .icon-image {
+    width: 40px;
+    height: 40px;
+  }
+.label {
+  width: 100%;
+  text-align: left;
+  margin: 10px 0 5px 0;
+  font-size: 18px; /* Cambiado el tamaño de la fuente */
+  color: #030303;
+  font-family: 'Roboto', sans-serif; /* Tipo de letra */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Sombra de texto */
+}
+
+.inner-rectangle {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: none;
+    border-radius: 10px;
+    box-sizing: border-box;
+  }
+  
+  .inner-rectangle[type="text"], .inner-rectangle[type="password"] {
+    background-color: white;
+    color: #000000;
+  }
+
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .action-button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(to right, #0253aa, #0a9dbb); /* Degradado de color */
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease, font-size 0.3s ease; /* Transición para el cambio de color y tamaño de fuente */
+    font-family: 'Roboto', sans-serif; /* Tipo de letra */
+    font-size: 16px; /* Tamaño de la letra */
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .action-button:hover {
+    background: linear-gradient(to right, #2880df, #0ac2f5); /* Degradado de color al pasar el ratón */
+    font-size: 16px; /* Cambia el tamaño de la letra al pasar el ratón */
+  }
+  
+  h1{
+    width: 100%;
+    text-align: center;
+    margin: 10px 0 5px 0;
+    font-size: 40px; /* Cambiado el tamaño de la fuente */
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif; /* Tipo de letra */
+    text-shadow: 2px 2px 4px rgba(102, 102, 102, 0.6); /* Sombra de texto */
+    margin-bottom: 30px;
+  }

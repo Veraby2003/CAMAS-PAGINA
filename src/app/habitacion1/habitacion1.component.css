@@ -1,0 +1,239 @@
+.page-specific-background {
+  background-image: url('img/fondo_azul.jpg');
+  /* Ruta al fondo específico */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
+  /* Asegura que el fondo cubra toda la altura de la vista */
+  width: 100vw;
+  /* Asegura que el fondo cubra todo el ancho de la vista */
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.rectangle {
+  background-color: transparent;
+  background-image: url('img/con_paciente.jpg');
+  /* Asegúrate de que la ruta de la imagen sea correcta */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  height: 430px;
+  /* Altura de los rectángulos */
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+  animation: border-glow-white 2s infinite;
+}
+
+.rectangle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(231, 69, 5, 0.808) 0%, rgba(255, 255, 255, 0) 50%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s, opacity 1s;
+  opacity: 0;
+}
+
+
+.rectangle:hover {
+  transform: scale(1.01);
+}
+
+.rectangle-title {
+  background: rgba(0, 0, 0, 0.5);
+  /* Fondo semitransparente */
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 30px;
+  /* Cambiado el tamaño de la fuente */
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  /* Tipo de letra */
+  text-shadow: 4px 6px 6px rgb(243, 239, 20);
+  /* Sombra de texto */
+  margin-bottom: 30px;
+  border-radius: 8px;
+  position: absolute;
+  /* Posiciona el título absolutamente dentro del rectángulo */
+  top: 0;
+  /* Alinea el título en la parte superior */
+  left: 0;
+  /* Alinea el título en la parte izquierda */
+  right: 0;
+  /* Alinea el título en la parte derecha */
+
+}
+
+.toggle-button {
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  position: absolute;
+  bottom: 10px;
+  /* Posiciona el botón 10px desde el fondo del rectángulo */
+  right: 10px;
+  /* Posiciona el botón 10px desde el lado derecho del rectángulo */
+}
+
+.button-original {
+  background: linear-gradient(to bottom right, #6b1818, #f00e0e);
+  color: white;
+}
+
+.button-alternate {
+  background: linear-gradient(to bottom right, #18123b, #2a489b);
+  color: white;
+}
+
+h1 {
+  width: 100%;
+  text-align: left;
+  font-size: 40px;
+  padding: -500px;
+}
+
+/* Estilos para la barra de navegación */
+.navbar {
+  background: linear-gradient(to bottom right, #18123b, #2a489b);
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgb(29, 29, 29);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: auto;
+  cursor: pointer;
+}
+
+.navbar-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.navbar-links li {
+  margin: 0 10px;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.navbar-links a:hover {
+  background-color: #b4b6d3;
+}
+
+.original-image {
+  background-image: url('img/sin_paciente.jpg');
+  /* Ruta a la imagen original */
+}
+
+.alternate-image {
+  background-image: url('img/con_paciente.jpg');
+  /* Ruta a la imagen alterna */
+}
+
+
+@keyframes blink-animation {
+  0% {
+    box-shadow: 0 0 10px 10px rgb(255, 0, 0);
+
+  }
+
+  50% {
+    box-shadow: 0 0 100px 100px rgba(255, 0, 0, 0);
+
+  }
+
+  100% {
+    box-shadow: 0 0 5px 5px rgba(255, 0, 0);
+  }
+}
+
+.blink1 {
+  animation: blink-animation 1.5s infinite;
+}
+@keyframes border-glow {
+  0% {
+    box-shadow: 0 0 5px 5px #f00e0e;
+  }
+  50% {
+    box-shadow: 0 0 10px 10px #f00e0e;
+  }
+  100% {
+    box-shadow: 0 0 5px 5px #f00e0e;
+  }
+}
+
+.rectangle.blink::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.blink {
+  animation: border-glow 2s infinite;
+  box-shadow: 0 0 5px 5px #f00e0e;
+}
+
+
+/* Animación de borde blanco */
+@keyframes border-glow-white {
+  0% {
+    box-shadow: 0 0 5px 5px #3b3b3b;
+  }
+  50% {
+    box-shadow: 0 0 10px 10px #3b3b3b;
+  }
+  100% {
+    box-shadow: 0 0 5px 5px #3b3b3b;
+  }
+}
+.delete-call-button {
+  /* Añade estilos para asegurarte de que el botón sea visible */
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
