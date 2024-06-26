@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Hab1Service } from './services/hab1.service';
 import { SocketService } from '../services/socket.service';
 import { CamaStateService } from '../areahab/service/cama-state.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-habitacion1',
@@ -27,10 +28,13 @@ export class Habitacion1Component implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     private camaStateService: CamaStateService,
     private socketService: SocketService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient // Agrega HttpClient como una dependencia
   ) { }
 
   ngOnInit(): void {
+    this.sendInitialPostRequest(); // Envía el POST request al inicio
+
     this.applyBlinkingState();
 
     // Suscripción al servicio de socket (si deseas recibir llamadas de camas por socket)
@@ -43,6 +47,13 @@ export class Habitacion1Component implements OnInit, OnDestroy {
         this.camaStateService.setCalledCama(habitacion, cama, message);
         this.llamadasCamas = this.camaStateService.getCalledCamas();
         this.activarParpadeo(habitacion);
+
+        if (cama > 13) {
+          // Simular eliminación de llamada para cama mayor que 13 después de recibir la respuesta
+          setTimeout(() => {
+            this.eliminarLlamada(this.llamadasCamas.findIndex(llamada => llamada.cama === cama));
+          }, 1000);
+        }
       }
     });
 
@@ -61,8 +72,18 @@ export class Habitacion1Component implements OnInit, OnDestroy {
     }
   }
 
+  sendInitialPostRequest(): void {
+    const camaInicial = 13;
+    this.http.post('http://localhost:3000/call-room', {
+      habitacion: this.habitacion.toString(),
+      cama: camaInicial.toString(),
+      mensaje: ''
+    }).subscribe(response => {
+      console.log('Initial POST request successful:', response);
+    });
+  }
+
   activarParpadeo(habitacion: number): void {
-    // Lógica para activar el parpadeo según la habitación recibida
     this.llamadasCamas.forEach(llamada => {
       if (llamada.habitacion === habitacion) {
         this.blinkRectangle(llamada.habitacion, llamada.cama);
@@ -80,33 +101,11 @@ export class Habitacion1Component implements OnInit, OnDestroy {
       }
     }
   }
-
-  registerLlamada(habitacion: number, cama: number): void {
-
-    this.llamadasCamas.push({ habitacion, cama });
+  eliminarLlamada(index: number): void {
+    const llamada = this.llamadasCamas[index];
+    this.stopBlink(llamada.habitacion, llamada.cama);
+    this.camaStateService.clearCalledCamaByIndex(index);
   }
-  addCama() {
-    this.camaService.addCama(this.habitacion1);
-  }
-
-  removeCama() {
-    this.camaService.removeCama(this.habitacion1);
-  }
-
-  toggleImage(cama: { id: number, title: string, isOriginalImage: boolean }) {
-    this.camaService.toggleImage(this.habitacion1, cama);
-  }
-
-  irinicio() {
-    this.router.navigate(['/rectangulos']);
-  }
-
-eliminarLlamada(index: number): void {
-  const llamada = this.llamadasCamas[index];
-  this.stopBlink(llamada.habitacion, llamada.cama);
-  this.camaStateService.clearCalledCamaByIndex(index);
-}
-
 
   stopBlink(habitacion: number, cama: number): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -128,6 +127,7 @@ eliminarLlamada(index: number): void {
       default: return '';
     }
   }
+
   private applyBlinkingState(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.camaService.habitaciones[this.habitacion1].forEach(cama => {
@@ -142,4 +142,24 @@ eliminarLlamada(index: number): void {
       });
     }
   }
+  registerLlamada(habitacion: number, cama: number): void {
+
+    this.llamadasCamas.push({ habitacion, cama });
+  }
+  addCama() {
+    this.camaService.addCama(this.habitacion1);
+  }
+
+  removeCama() {
+    this.camaService.removeCama(this.habitacion1);
+  }
+
+  toggleImage(cama: { id: number, title: string, isOriginalImage: boolean }) {
+    this.camaService.toggleImage(this.habitacion1, cama);
+  }
+
+  irinicio() {
+    this.router.navigate(['/rectangulos']);
+  }
+
 }

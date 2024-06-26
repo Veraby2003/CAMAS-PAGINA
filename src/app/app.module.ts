@@ -15,6 +15,7 @@ import { Hab2Service } from './habitacion2/services/hab2.service';
 import { Hab3Service } from './habitacion3/services/hab3.service';
 import { Hab4Service } from './habitacion4/services/hab4.service';
 import { CamaStateService } from './areahab/service/cama-state.service';
+import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,9 +26,10 @@ import { CamaStateService } from './areahab/service/cama-state.service';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
-  providers: [CamaStateService,AuthService,SocketService,Hab1Service,Hab2Service,Hab3Service,Hab4Service],
+  providers: [CamaStateService,AuthService,SocketService,Hab1Service,Hab2Service,Hab3Service,Hab4Service, provideHttpClient(withFetch())],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -26,7 +26,7 @@
 </div>
 
 <div *ngFor="let llamada of llamadasCamas">
-  <ng-container *ngIf="llamada.habitacion == 1">
+  <ng-container *ngIf="llamada.habitacion == 1 && llamada.cama< 13">
     <div class="llamada-item">
       <p><strong>Habitación:</strong> {{ llamada.habitacion }}</p>
       <p><strong>Cama:</strong> {{ llamada.cama }}</p>
