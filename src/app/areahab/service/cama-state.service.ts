@@ -1,33 +1,41 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CamaStateService {
-  private calledCamas: { habitacion: number, cama: number, nombreHabitacion: string, message?: string }[] = [];
-  private redOutlineActive: boolean = false;
+  private calledCamasSubject = new BehaviorSubject<{ habitacion: number, cama: number, message?: string }[]>([]);
+  calledCamas$ = this.calledCamasSubject.asObservable();
+  private redOutlineActive = new BehaviorSubject<boolean>(false);
 
-  setCalledCama(habitacion: number, cama: number, nombreHabitacion: string, message?: string): void {
-    this.calledCamas.push({ habitacion, cama, nombreHabitacion, message });
-    this.redOutlineActive = true;
+  setCalledCama(habitacion: number, cama: number, message?: string): void {
+    const currentCamas = this.calledCamasSubject.getValue();
+    this.calledCamasSubject.next([...currentCamas, { habitacion, cama, message }]);
+    this.redOutlineActive.next(true);
   }
 
-  getCalledCamas(): { habitacion: number, cama: number, nombreHabitacion: string, message?: string }[] {
-    return this.calledCamas;
+  getCalledCamas(): { habitacion: number, cama: number, message?: string }[] {
+    return this.calledCamasSubject.getValue();
   }
 
   clearCalledCamaByIndex(index: number): void {
-    if (index >= 0 && index < this.calledCamas.length) {
-      this.calledCamas.splice(index, 1);
+    const currentCamas = this.calledCamasSubject.getValue();
+    if (index >= 0 && index < currentCamas.length) {
+      currentCamas.splice(index, 1);
+      this.calledCamasSubject.next([...currentCamas]);
+      if (currentCamas.length === 0) {
+        this.redOutlineActive.next(false);
+      }
     }
   }
 
   isRedOutlineActive(): boolean {
-    return this.redOutlineActive;
+    return this.redOutlineActive.getValue();
   }
 
   clearCalledCamas(): void {
-    this.calledCamas = [];
-    this.redOutlineActive = false;
+    this.calledCamasSubject.next([]);
+    this.redOutlineActive.next(false);
   }
 }

@@ -14,9 +14,10 @@ import { CamaStateService } from './service/cama-state.service';
   styleUrls: ['./areahab.component.css']
 })
 export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
-  llamadasCamas: { habitacion: number, cama: number, nombreHabitacion: string,message?: string}[] = [];
+  llamadasCamas: { habitacion: number, cama: number, message?: string }[] = [];
   private socketSubscription?: Subscription;
   private parpadeoActivo: { [key: number]: boolean } = {};
+  private camaStateSubscription?: Subscription;
 
   constructor(
     private socketService: SocketService,
@@ -29,23 +30,29 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
     this.socketSubscription = this.socketService.onRoomCalled().subscribe(data => {
       const { habitacion, cama, message } = data;
       console.log('Data received:', data);
-  
+
       if (habitacion !== null && cama !== null) {
         const nombreHabitacion = this.getNombreHabitacion(habitacion);
-        this.camaStateService.setCalledCama(habitacion, cama, nombreHabitacion, message); // Aquí se pasa el message si existe
+        this.camaStateService.setCalledCama(habitacion, cama, message);
         this.llamadasCamas = this.camaStateService.getCalledCamas();
         this.activarParpadeo(habitacion);
       }
     });
-  
-    this.llamadasCamas = this.camaStateService.getCalledCamas();
-    this.llamadasCamas.forEach(llamada => {
-      this.activarParpadeo(llamada.habitacion);
+
+    this.camaStateSubscription = this.camaStateService.calledCamas$.subscribe(camas => {
+      this.llamadasCamas = camas;
+      camas.forEach(llamada => {
+        this.activarParpadeo(llamada.habitacion);
+      });
     });
   }
+
   ngOnDestroy(): void {
     if (this.socketSubscription) {
       this.socketSubscription.unsubscribe();
+    }
+    if (this.camaStateSubscription) {
+      this.camaStateSubscription.unsubscribe();
     }
   }
 
@@ -64,7 +71,7 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
           if (this.parpadeoActivo[habitacion]) {
             this.blinkRectangle(rectangleId);
           }
-        },1);
+        }, 1);
       }
     }
   }
@@ -73,17 +80,17 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
     const llamada = this.llamadasCamas[index];
     this.camaStateService.clearCalledCamaByIndex(index);
     this.llamadasCamas = this.camaStateService.getCalledCamas();
-  
+
     // Verificar si aún hay llamadas activas para la misma habitación
     const llamadasActivas = this.llamadasCamas.filter(llamada =>
       this.parpadeoActivo[llamada.habitacion]
     );
-  
+
     if (llamadasActivas.length === 0) {
       this.desactivarParpadeo(llamada.habitacion);
     }
   }
-  
+
   private getNombreHabitacion(habitacion: number): string {
     switch (habitacion) {
       case 1: return 'Habitación Uno';
@@ -93,6 +100,7 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
       default: return '';
     }
   }
+
   private activarParpadeo(habitacion: number): void {
     if (!this.parpadeoActivo[habitacion]) {
       this.parpadeoActivo[habitacion] = true;

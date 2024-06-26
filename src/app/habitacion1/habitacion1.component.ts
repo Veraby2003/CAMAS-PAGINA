@@ -17,6 +17,7 @@ import { CamaStateService } from '../areahab/service/cama-state.service';
   styleUrls: ['./habitacion1.component.css']
 })
 export class Habitacion1Component implements OnInit, OnDestroy {
+  llamadasCamas: { habitacion: number, cama: number, message?: string }[] = []; 
   habitacion1: string = 'habitacion1';
   habitacion: number = 1;
   private socketSubscription?: Subscription;
@@ -46,7 +47,20 @@ export class Habitacion1Component implements OnInit, OnDestroy {
         this.blinkRectangle(habitacion, cama);
       }
     });
+    
+    this.camaStateService.calledCamas$.subscribe(data => {
+      this.llamadasCamas = data;
+      
+      // Iterar sobre las llamadas y activar el parpadeo según corresponda
+      data.forEach(llamada => {
+        if (llamada.habitacion === this.habitacion) {
+          this.blinkRectangle(llamada.habitacion, llamada.cama);
+        }
+      });
+    });
+    
   }
+  
 
   ngOnDestroy(): void {
     if (this.socketSubscription) {
@@ -80,6 +94,12 @@ export class Habitacion1Component implements OnInit, OnDestroy {
       }
     }
   }
+eliminarLlamada(index: number): void {
+  const llamada = this.llamadasCamas[index];
+  this.stopBlink(llamada.habitacion, llamada.cama);
+  this.camaStateService.clearCalledCamaByIndex(index);
+}
+
 
   stopBlink(habitacion: number, cama: number): void {
     if (isPlatformBrowser(this.platformId)) {

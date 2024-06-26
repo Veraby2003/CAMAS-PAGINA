@@ -5,15 +5,6 @@
     </div>
   </nav>
 
-  <!-- Iterar sobre las llamadas de camas acumuladas -->
-  <div *ngFor="let llamada of llamadasCamas; let i = index">
-    <div>
-      <h2>Habitación {{ llamada.habitacion }}</h2>
-      <h2>Cama {{ llamada.cama }}</h2>
-      <h2>mensaje {{ llamada.message}}</h2>
-      <button (click)="eliminarLlamada(i)">Eliminar llamada</button>
-    </div>
-  </div>
 
   <div class="grid-container">
     <div class="rectangle top-left" id="habitacion1" (click)="redirigir('habitacion1')">

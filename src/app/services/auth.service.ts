@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private storedEmail: string = 'veraby2003';
+  private storedEmail: string = '123';
   private storedPassword: string = '123';
 
   constructor() { }
