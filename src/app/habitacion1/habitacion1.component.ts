@@ -17,7 +17,7 @@ import { CamaStateService } from '../areahab/service/cama-state.service';
   styleUrls: ['./habitacion1.component.css']
 })
 export class Habitacion1Component implements OnInit, OnDestroy {
-  llamadasCamas: { habitacion: number, cama: number, message?: string }[] = []; 
+  llamadasCamas: { habitacion: number, cama: number, message?: string }[] = [];
   habitacion1: string = 'habitacion1';
   habitacion: number = 1;
   private socketSubscription?: Subscription;
@@ -33,34 +33,27 @@ export class Habitacion1Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.applyBlinkingState();
 
-    const calledCamas = this.camaStateService.getCalledCamas(); // Corregido a getCalledCamas
-    const calledCama = calledCamas.find(cama => cama.habitacion === this.habitacion); // Ejemplo de cómo obtener una cama específica
-
-    if (calledCama) {
-      this.blinkRectangle(calledCama.habitacion, calledCama.cama);
-    }
-
+    // Suscripción al servicio de socket (si deseas recibir llamadas de camas por socket)
     this.socketSubscription = this.socketService.onRoomCalled().subscribe(data => {
-      const habitacion = data.habitacion;
-      const cama = data.cama;
+      const { habitacion, cama, message } = data;
+      console.log('Data received:', data);
+
       if (habitacion !== null && cama !== null) {
-        this.blinkRectangle(habitacion, cama);
+        const nombreHabitacion = this.getNombreHabitacion(habitacion);
+        this.camaStateService.setCalledCama(habitacion, cama, message);
+        this.llamadasCamas = this.camaStateService.getCalledCamas();
+        this.activarParpadeo(habitacion);
       }
     });
-    
-    this.camaStateService.calledCamas$.subscribe(data => {
-      this.llamadasCamas = data;
-      
-      // Iterar sobre las llamadas y activar el parpadeo según corresponda
-      data.forEach(llamada => {
-        if (llamada.habitacion === this.habitacion) {
-          this.blinkRectangle(llamada.habitacion, llamada.cama);
-        }
+
+    // Suscripción al servicio de estado de camas
+    this.camaStateService.calledCamas$.subscribe(camas => {
+      this.llamadasCamas = camas;
+      camas.forEach(llamada => {
+        this.activarParpadeo(llamada.habitacion);
       });
     });
-    
   }
-  
 
   ngOnDestroy(): void {
     if (this.socketSubscription) {
@@ -68,6 +61,30 @@ export class Habitacion1Component implements OnInit, OnDestroy {
     }
   }
 
+  activarParpadeo(habitacion: number): void {
+    // Lógica para activar el parpadeo según la habitación recibida
+    this.llamadasCamas.forEach(llamada => {
+      if (llamada.habitacion === habitacion) {
+        this.blinkRectangle(llamada.habitacion, llamada.cama);
+      }
+    });
+  }
+
+  blinkRectangle(habitacion: number, cama: number): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const elementId = `habitacion${habitacion}cama${cama}`;
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.classList.add('blink');
+        this.camaService.toggleBlinking(this.habitacion1, cama, true);
+      }
+    }
+  }
+
+  registerLlamada(habitacion: number, cama: number): void {
+
+    this.llamadasCamas.push({ habitacion, cama });
+  }
   addCama() {
     this.camaService.addCama(this.habitacion1);
   }
@@ -84,16 +101,6 @@ export class Habitacion1Component implements OnInit, OnDestroy {
     this.router.navigate(['/rectangulos']);
   }
 
-  blinkRectangle(habitacion: number, cama: number): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const elementId = `habitacion${habitacion}cama${cama}`;
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.classList.add('blink');
-        this.camaService.toggleBlinking(this.habitacion1, cama, true);
-      }
-    }
-  }
 eliminarLlamada(index: number): void {
   const llamada = this.llamadasCamas[index];
   this.stopBlink(llamada.habitacion, llamada.cama);
@@ -112,6 +119,15 @@ eliminarLlamada(index: number): void {
     }
   }
 
+  private getNombreHabitacion(habitacion: number): string {
+    switch (habitacion) {
+      case 1: return 'habitación1';
+      case 2: return 'habitación2';
+      case 3: return 'habitación3';
+      case 4: return 'habitación4';
+      default: return '';
+    }
+  }
   private applyBlinkingState(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.camaService.habitaciones[this.habitacion1].forEach(cama => {
