@@ -15,7 +15,7 @@
         class="rectangle"
         [ngClass]="{ 'original-image': cama.isOriginalImage, 'alternate-image': !cama.isOriginalImage }"
         [id]="'habitacion' + habitacion + 'cama' + cama.id"
-        (click)="stopBlink(habitacion, cama.id)">>
+        (click)="stopBlink(habitacion, cama.id)">
         <div class="rectangle-title">{{ cama.title }}</div>
         <button class="toggle-button"
           [ngClass]="{ 'button-original': cama.isOriginalImage, 'button-alternate': !cama.isOriginalImage }"
