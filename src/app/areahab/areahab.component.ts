@@ -35,14 +35,14 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
         const nombreHabitacion = this.getNombreHabitacion(habitacion);
         this.camaStateService.setCalledCama(habitacion, cama, message);
         this.llamadasCamas = this.camaStateService.getCalledCamas();
-        this.activarParpadeo(habitacion);
+        this.activarParpadeo(habitacion, cama);
       }
     });
 
     this.camaStateSubscription = this.camaStateService.calledCamas$.subscribe(camas => {
       this.llamadasCamas = camas;
       camas.forEach(llamada => {
-        this.activarParpadeo(llamada.habitacion);
+        this.activarParpadeo(llamada.habitacion, llamada.cama);
       });
     });
   }
@@ -83,7 +83,7 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
 
     // Verificar si aún hay llamadas activas para la misma habitación
     const llamadasActivas = this.llamadasCamas.filter(llamada =>
-      this.parpadeoActivo[llamada.habitacion]
+      this.parpadeoActivo[llamada.habitacion] && llamada.cama <= 12
     );
 
     if (llamadasActivas.length === 0) {
@@ -101,8 +101,8 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
     }
   }
 
-  private activarParpadeo(habitacion: number): void {
-    if (!this.parpadeoActivo[habitacion]) {
+  private activarParpadeo(habitacion: number, cama: number): void {
+    if (cama <= 12 && !this.parpadeoActivo[habitacion]) {
       this.parpadeoActivo[habitacion] = true;
       this.blinkRectangle(`habitacion${habitacion}`);
     }
