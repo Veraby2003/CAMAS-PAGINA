@@ -19,7 +19,8 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
   private socketSubscription?: Subscription;
   private parpadeoActivo: { [key: number]: boolean } = {};
   private camaStateSubscription?: Subscription;
-  habitacion1: string = 'habitacion1';
+  habitaciones: string[] = ['habitacion1', 'habitacion2', 'habitacion3', 'habitacion4'];
+
 
   constructor(
     public camaService: Hab1Service,
@@ -33,15 +34,14 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
     this.socketSubscription = this.socketService.onRoomCalled().subscribe(data => {
       const { habitacion, cama, message } = data;
       console.log('Data received:', data);
-
+  
       if (habitacion !== null && cama !== null) {
-        const nombreHabitacion = this.getNombreHabitacion(habitacion);
         this.camaStateService.setCalledCama(habitacion, cama, message);
         this.llamadasCamas = this.camaStateService.getCalledCamas();
         this.activarParpadeo(habitacion, cama);
       }
     }); 
-
+  
     this.camaStateSubscription = this.camaStateService.calledCamas$.subscribe(camas => {
       this.llamadasCamas = camas;
       camas.forEach(llamada => {
@@ -107,15 +107,16 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
   }
 
   private activarParpadeo(habitacion: number, cama: number): void {
+    const nombreHabitacion = `habitacion${habitacion}`;
     if (
       cama <= 12 &&
       !this.parpadeoActivo[habitacion] &&
-      this.camaService.habitaciones[this.habitacion1] &&
-      this.camaService.habitaciones[this.habitacion1][cama - 1] &&
-      this.camaService.habitaciones[this.habitacion1][cama - 1].isOriginalImage
+      this.camaService.habitaciones[nombreHabitacion] &&
+      this.camaService.habitaciones[nombreHabitacion][cama - 1] &&
+      this.camaService.habitaciones[nombreHabitacion][cama - 1].isOriginalImage
     ) {
       this.parpadeoActivo[habitacion] = true;
-      this.blinkRectangle(`habitacion${habitacion}`);
+      this.blinkRectangle(nombreHabitacion);
     }
   }
 
