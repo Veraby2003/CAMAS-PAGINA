@@ -5,6 +5,7 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { ComponenteConPalabrasComponent } from '../componente-con-palabras/componente-con-palabras.component';
 import { SocketService } from '../services/socket.service';
 import { CamaStateService } from './service/cama-state.service';
+import { Hab1Service } from '../habitacion1/services/hab1.service';
 
 @Component({
   selector: 'app-area-hab',
@@ -18,8 +19,10 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
   private socketSubscription?: Subscription;
   private parpadeoActivo: { [key: number]: boolean } = {};
   private camaStateSubscription?: Subscription;
+  habitacion1: string = 'habitacion1';
 
   constructor(
+    public camaService: Hab1Service,
     private socketService: SocketService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router,
@@ -37,7 +40,7 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
         this.llamadasCamas = this.camaStateService.getCalledCamas();
         this.activarParpadeo(habitacion, cama);
       }
-    });
+    }); 
 
     this.camaStateSubscription = this.camaStateService.calledCamas$.subscribe(camas => {
       this.llamadasCamas = camas;
@@ -76,6 +79,8 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
     }
   }
 
+
+
   eliminarLlamada(index: number): void {
     const llamada = this.llamadasCamas[index];
     this.camaStateService.clearCalledCamaByIndex(index);
@@ -83,7 +88,7 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
 
     // Verificar si aún hay llamadas activas para la misma habitación
     const llamadasActivas = this.llamadasCamas.filter(llamada =>
-      this.parpadeoActivo[llamada.habitacion] && llamada.cama <= 12
+      this.parpadeoActivo[llamada.habitacion] && llamada.cama <= 15
     );
 
     if (llamadasActivas.length === 0) {
@@ -102,7 +107,13 @@ export class ComponenteConRectangulosComponent implements OnInit, OnDestroy {
   }
 
   private activarParpadeo(habitacion: number, cama: number): void {
-    if (cama <= 12 && !this.parpadeoActivo[habitacion]) {
+    if (
+      cama <= 12 &&
+      !this.parpadeoActivo[habitacion] &&
+      this.camaService.habitaciones[this.habitacion1] &&
+      this.camaService.habitaciones[this.habitacion1][cama - 1] &&
+      this.camaService.habitaciones[this.habitacion1][cama - 1].isOriginalImage
+    ) {
       this.parpadeoActivo[habitacion] = true;
       this.blinkRectangle(`habitacion${habitacion}`);
     }

@@ -1,11 +1,22 @@
-<nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-title">CENTRO DE SUPERVISION DE HABITACION</div>
-      <ul class="navbar-links">
-        <li><a routerLink="/instruccion1">Añadir habitaciones</a></li>
-        <li><a routerLink="/instruccion2">Eliminar eliminar</a></li>
-
-      </ul>
+<div mat-dialog-actions>
+  <button mat-button class="mat-button-custom" (click)="onNoClick()">Cerrar</button>
+</div>
+<h1 mat-dialog-title>Llamadas de Habitación {{ data.habitacion }} - Cama {{ data.cama }}</h1>
+<div mat-dialog-content class="content-container">
+  <div class="rectangulo"></div> <!-- Rectángulo a la izquierda -->
+  <div class="llamadas-container">
+    <div *ngFor="let llamada of llamadasCamas">
+      <ng-container *ngIf="llamada.habitacion == habitacion && llamada.cama == cama">
+        <div class="llamada-item">
+          <div class="mensaje-container">
+            <p *ngIf="llamada.message">
+              <strong>Mensaje:</strong>
+              <ng-container style="white-space: pre-line;">{{ llamada.message }}</ng-container>
+            </p>
+            <button  class="llamada-estado"(click)="eliminarLlamada(llamadasCamas.indexOf(llamada))">ATENDER</button>
+          </div>
+        </div>
+      </ng-container>
     </div>
-  </nav>
-  
+  </div>
+</div>

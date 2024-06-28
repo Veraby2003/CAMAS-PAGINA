@@ -91,7 +91,7 @@ export class Hab1Service {
   }
 
   getButtonText(cama: Cama): string {
-    return cama.isOriginalImage ? 'Sin Paciente' : 'Con Paciente';
+    return cama.isOriginalImage ? 'Con Paciente' : 'Sin Paciente';
   }
 
   private reorderCamas(habitacion: string): void {

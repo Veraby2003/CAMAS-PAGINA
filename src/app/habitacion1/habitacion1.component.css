@@ -98,12 +98,13 @@
 }
 
 .button-original {
-  background: linear-gradient(to bottom right, #6b1818, #f00e0e);
+  
+  background: linear-gradient(to bottom right, #18123b, #2a489b);
   color: white;
 }
 
 .button-alternate {
-  background: linear-gradient(to bottom right, #18123b, #2a489b);
+  background: linear-gradient(to bottom right, #6b1818, #f00e0e);
   color: white;
 }
 

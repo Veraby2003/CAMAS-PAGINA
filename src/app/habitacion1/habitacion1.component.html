@@ -13,25 +13,18 @@
     <div class="container">
       <div *ngFor="let cama of camaService.habitaciones[habitacion1]; let i = index"
         class="rectangle"
-        [ngClass]="{ 'original-image': cama.isOriginalImage, 'alternate-image': !cama.isOriginalImage }"
+        [ngClass]="{ 'original-image': !cama.isOriginalImage, 'alternate-image': cama.isOriginalImage }"
         [id]="'habitacion' + habitacion + 'cama' + cama.id"
-        (click)="stopBlink(habitacion, cama.id)">
+        (click)="cama.isOriginalImage ? onImageClick(habitacion, cama.id) : null">
         <div class="rectangle-title">{{ cama.title }}</div>
-        <button class="toggle-button"
-          [ngClass]="{ 'button-original': cama.isOriginalImage, 'button-alternate': !cama.isOriginalImage }"
-          (click)="toggleImage(cama)">{{ camaService.getButtonText(cama) }}</button>
+        
+        <!-- Contenedor para posicionar el botón toggleImage -->
+        <div class="toggle-button-container">
+          <button class="toggle-button"
+            [ngClass]="{ 'button-original': cama.isOriginalImage, 'button-alternate': !cama.isOriginalImage }"
+            (click)="toggleImage(cama)">{{ camaService.getButtonText(cama) }}</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<div *ngFor="let llamada of llamadasCamas">
-  <ng-container *ngIf="llamada.habitacion == 1 && llamada.cama< 13">
-    <div class="llamada-item">
-      <p><strong>Habitación:</strong> {{ llamada.habitacion }}</p>
-      <p><strong>Cama:</strong> {{ llamada.cama }}</p>
-      <p *ngIf="llamada.message"><strong>Mensaje:</strong> {{ llamada.message }}</p>
-      <button (click)="eliminarLlamada(llamadasCamas.indexOf(llamada))">Eliminar Llamada</button>
-    </div>
-  </ng-container>
 </div>

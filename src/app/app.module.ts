@@ -16,6 +16,8 @@ import { Hab3Service } from './habitacion3/services/hab3.service';
 import { Hab4Service } from './habitacion4/services/hab4.service';
 import { CamaStateService } from './areahab/service/cama-state.service';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/
     AppRoutingModule,
     FormsModule,
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule
   ],
   providers: [CamaStateService,AuthService,SocketService,Hab1Service,Hab2Service,Hab3Service,Hab4Service, provideHttpClient(withFetch())],
   bootstrap: [AppComponent]

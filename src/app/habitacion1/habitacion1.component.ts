@@ -9,11 +9,12 @@ import { Hab1Service } from './services/hab1.service';
 import { SocketService } from '../services/socket.service';
 import { CamaStateService } from '../areahab/service/cama-state.service';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-habitacion1',
   standalone: true,
-  imports: [ComponenteConPalabrasComponent, CommonModule],
+  imports: [CommonModule,MatDialogModule],
   templateUrl: './habitacion1.component.html',
   styleUrls: ['./habitacion1.component.css']
 })
@@ -29,7 +30,8 @@ export class Habitacion1Component implements OnInit, OnDestroy {
     private camaStateService: CamaStateService,
     private socketService: SocketService,
     private router: Router,
-    private http: HttpClient // Agrega HttpClient como una dependencia
+    private http: HttpClient,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -60,9 +62,7 @@ export class Habitacion1Component implements OnInit, OnDestroy {
     // Suscripción al servicio de estado de camas
     this.camaStateService.calledCamas$.subscribe(camas => {
       this.llamadasCamas = camas;
-      camas.forEach(llamada => {
-        this.activarParpadeo(llamada.habitacion);
-      });
+      this.actualizarParpadeo(); // Actualizar el parpadeo después de recibir las llamadas
     });
   }
 
@@ -70,6 +70,29 @@ export class Habitacion1Component implements OnInit, OnDestroy {
     if (this.socketSubscription) {
       this.socketSubscription.unsubscribe();
     }
+  }
+
+  onImageClick(habitacion: number, cama: number): void {
+
+    const camaTieneLlamada = this.llamadasCamas.some(llamada => llamada.habitacion == habitacion && llamada.cama == cama);
+    if (!camaTieneLlamada) {
+      return; // Si la cama no tiene llamada, no abrir el diálogo
+    }
+
+    const dialogRef = this.dialog.open(ComponenteConPalabrasComponent, {
+      data: {
+        habitacion,
+        cama,
+        llamadasCamas: this.llamadasCamas // Pasar todas las llamadas de camas sin filtrar
+      }
+    });
+  
+
+    dialogRef.afterClosed().subscribe(() => {
+      // Aquí puedes realizar acciones después de cerrar el diálogo, si es necesario
+      this.sendInitialPostRequest(); // Volver a enviar el POST request al cerrar el diálogo
+      this.actualizarParpadeo(); // Actualizar el parpadeo al cerrar el diálogo
+    });
   }
 
   sendInitialPostRequest(): void {
@@ -95,16 +118,17 @@ export class Habitacion1Component implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       const elementId = `habitacion${habitacion}cama${cama}`;
       const element = document.getElementById(elementId);
-      if (element) {
+      if (element && this.camaService.habitaciones[this.habitacion1][cama - 1].isOriginalImage) {
         element.classList.add('blink');
         this.camaService.toggleBlinking(this.habitacion1, cama, true);
       }
     }
   }
+
   eliminarLlamada(index: number): void {
     const llamada = this.llamadasCamas[index];
-    this.stopBlink(llamada.habitacion, llamada.cama);
     this.camaStateService.clearCalledCamaByIndex(index);
+    this.actualizarParpadeo(); // Actualizar el parpadeo después de eliminar la llamada
   }
 
   stopBlink(habitacion: number, cama: number): void {
@@ -142,10 +166,32 @@ export class Habitacion1Component implements OnInit, OnDestroy {
       });
     }
   }
-  registerLlamada(habitacion: number, cama: number): void {
 
-    this.llamadasCamas.push({ habitacion, cama });
+  private actualizarParpadeo(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.camaService.habitaciones[this.habitacion1].forEach(cama => {
+        const llamadaActiva = this.llamadasCamas.some(llamada => llamada.habitacion === this.habitacion && llamada.cama === cama.id);
+        const elementId = `habitacion${this.habitacion}cama${cama.id}`;
+        const element = document.getElementById(elementId);
+
+        if (element) {
+          if (llamadaActiva && !element.classList.contains('blink')) {
+            element.classList.add('blink');
+            this.camaService.toggleBlinking(this.habitacion1, cama.id, true);
+          } else if (!llamadaActiva && element.classList.contains('blink')) {
+            element.classList.remove('blink');
+            this.camaService.toggleBlinking(this.habitacion1, cama.id, false);
+          }
+        }
+      });
+    }
   }
+
+  registerLlamada(habitacion: number, cama: number): void {
+    this.llamadasCamas.push({ habitacion, cama });
+    this.actualizarParpadeo(); // Actualizar el parpadeo al registrar una llamada
+  }
+
   addCama() {
     this.camaService.addCama(this.habitacion1);
   }
@@ -161,5 +207,4 @@ export class Habitacion1Component implements OnInit, OnDestroy {
   irinicio() {
     this.router.navigate(['/rectangulos']);
   }
-
 }

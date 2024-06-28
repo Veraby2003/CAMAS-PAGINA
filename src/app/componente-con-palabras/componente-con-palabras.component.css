@@ -1,126 +1,138 @@
-h1{
-    width: 100%;
-    text-align: left;
-    font-size: 40px;
-    padding: -500px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+/* Contenedor principal del modal */
+:host {
+  display: block;
+  padding: 20px;
+  height: 800px; 
+  width: 800px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  text-transform: uppercase;
+  font-weight: 800; /* Más negrita */
+}
 
-.navbar {
-  background: linear-gradient(to bottom right, #18123b, #2a489b);
-  color: white;
-  padding: 10px 20px;
+/* Contenedor del contenido del modal */
+.content-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-family: 'Roboto', sans-serif;
-  position: fixed; /* Fijar la barra de navegación */
-  width: 100%;
-  top: 0;
-  z-index: 1000;
+  height: 90%;
 }
 
-.navbar-container {
+/* Rectángulo a la izquierda */
+.rectangulo {
+  width: 50%;
+  height: 95%;
+  background-color: transparent;
+  background-image: url('img/con_paciente.jpg'); /* Asegúrate de que la ruta de la imagen sea correcta */
+  background-size: cover;
+  background-position: center;
+  color: rgb(22, 29, 34);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, filter 0.2s ease-in-out;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Contenedor de las llamadas */
+.llamadas-container {
+  width: 50%; /* Ocupa la mitad derecha */
+  padding-left: 20px; /* Espacio entre el rectángulo y el contenido */
+  overflow-y: auto;
+}
+
+/* Mensajes individuales */
+.llamada-item {
+  display: flex; /* Utilizar flexbox para alinear elementos */
+  align-items: center; /* Centrar verticalmente */
+  gap: 10px; /* Espacio entre elementos */
+  color: #ffffff;
+  font-size: 16px;
+    margin-bottom: 20px; /* Espacio hacia abajo */
+}
+
+/* Contenedor del mensaje */
+.mensaje-container {
+  width: 85%;
+  flex: 1; /* Ocupa todo el espacio restante */
   display: flex;
   align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 10px; /* Espacio entre el mensaje y el botón */
 }
 
-.navbar-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-right: auto;
-}
-
-.navbar-links {
-  list-style: none;
+/* Estilo de los mensajes */
+.llamada-item p {
+  font-size: 1rem;
   margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-.navbar-links li {
-  margin: 0 15px;
-}
-
-.navbar-links a {
-  color: white;
-  text-decoration: none;
   padding: 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  color: #000000;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 2px  solid  red;
+  text-align: justify; /* Añade justificación al texto */
+}
+
+/* Acciones del modal */
+.mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Botón de cierre */
+.mat-button-custom {
+  padding: 10px 20px;
+  color: #fff;
+  background: linear-gradient(to right, #2880df, #0ac2f5); /* Degradado de color */
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
 }
 
-.navbar-links a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.mat-button-custom:hover {
+  background: linear-gradient(to right, #1e6091, #08a0c7); /* Degradado de color al pasar el ratón */
+  transform: scale(1.05); /* Efecto de aumento al pasar el ratón */
 }
 
-@media (max-width: 768px) {
-  .navbar {
-    padding: 10px;
-  }
-
-  .navbar-links {
-    flex-direction: column;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background: linear-gradient(to bottom right, #18123b, #2a489b);
-    width: 100%;
-    display: none;
-  }
-
-  .navbar-links.active {
-    display: flex;
-  }
-
-  .navbar-links li {
-    margin: 10px 0;
-  }
-
-  .navbar-toggle {
-    display: block;
-    cursor: pointer;
-    font-size: 24px;
-  }
+/* Botón de eliminar llamada */
+.eliminar-llamada {
+  background-color: red;
+  color: white;
 }
 
-.navbar-toggle {
-  display: none;
+.eliminar-llamada:hover {
+  background-color: darkred;
 }
-  
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Ajusta el número de columnas según sea necesario */
-    gap: 10px;
-    padding: 20px;
-  }
-  
-  .habitacion {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .rectangle {
-    width: 100%;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid darkblue;
-    border-radius: 10px;
-    cursor: pointer;
-    background-color: lightblue;
-    transition: background-color 0.3s ease;
-  }
-  
-  .rectangle.selected {
-    background-color: red;
-    color: white;
-  }
-  
+
+/* Estado de la llamada */
+.llamada-estado {
+  font-family: 'Montserrat', sans-serif;
+  font-size: .7rem;
+  width: 200px;
+  height: 50px;
+  color: rgb(71, 21, 21);
+  background: linear-gradient(to right, #ff0000, #941a1a); /* Degradado de color */
+  cursor: pointer;
+  transition: color 0.3s, background 0.3s;
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.llamada-estado:hover {
+  color: rgb(29, 90, 29);
+  background: linear-gradient(to right, #1cff1c, #14881e); /* Degradado de color */
+}
